@@ -7,15 +7,19 @@ from time import sleep
 headers = {"User-Agent":
            "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729)"}
 
+def download(url):
+    resp = requests.get(url, stream=True)
+    r = open("/home/hankey/mytest/parser/image/" + url.split("/")[-1], "wb")
+    for value in resp.iter_content(1024*1024): # 1024 kb *1024Kb = 1Mb
+        r.write(value)
+    r.close()
+
 def get_url(): # Создали функцию - генератор страниц, чтобы не захламлять опер.память списками 
     for count in range(1, 8): # У нас всего 7 вэб-страниц и их нужно все обработать
 
         url = f'https://scrapingclub.com/exercise/list_basic/?page={count}'
-
         responce = requests.get(url, headers=headers)
-
         soup = BeautifulSoup(responce.text, "lxml") #Ещё один аналог lxml - htmll.parserб они нужны для структурирования HTML для лучшего поиска
-
         data = soup.find_all("div", class_="w-full rounded border")
 
         for i in data: #Делаем список из страниц с товаром для последующего разбора
@@ -34,4 +38,5 @@ def array(): # Создаём ещё одну ф-ю генератор, чере
         price = data.find("h4").text
         description = data.find("p", class_="card-description").text
         url_img = "https://scrapingclub.com" + data.find("img").get("src")
+        download(url_img) # Скачиваем картинку в файл и в пвпочку
         yield name, price, description, url_img

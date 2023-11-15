@@ -3,8 +3,8 @@ from pathlib import Path
 from main import array
 
 def writer(parametr):
-    path = Path("~/mytest/parser/")
-    book = xlsxwriter.Workbook(path + "data.xlsx")
+    path = Path("/home/hankey/mytest/parser/data.xlsx")
+    book = xlsxwriter.Workbook(path)
     page = book.add_worksheet("товар")
 
     row = 0
@@ -19,7 +19,7 @@ def writer(parametr):
         page.write(row, column+1, item[1])
         page.write(row, column+2, item[2])
         page.write(row, column+3, item[3])
-    row += 1
+        row += 1
 
     book.close()
 
